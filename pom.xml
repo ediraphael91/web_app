@@ -51,10 +51,6 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-rest-jackson</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-rest-multipart</artifactId>
-        </dependency>
         <!-- Driver PostgreSQL -->
         <dependency>
             <groupId>io.quarkus</groupId>
