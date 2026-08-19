@@ -2,12 +2,15 @@ package dev.com.infraestructure.adapter;
 
 import dev.com.application.ports.out.CursoOutPort;
 import dev.com.domain.entity.CursoDomain;
-import dev.com.domain.request.CursoRequest;
-import dev.com.domain.response.CursoResponse;
+import dev.com.infraestructure.adapter.out.entity.CursoEntity;
+import dev.com.infraestructure.adapter.out.repository.CursoRepository;
 import dev.com.infraestructure.adapter.out.repository.mapper.CursoMapper;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 /**
  * <b>
@@ -20,33 +23,42 @@ import java.util.stream.Collectors;
  * [: Edison Santacruz $, : 30/03/2026 $]
  * </p>
  */
-public class CursoAdapter {
+@ApplicationScoped
+@AllArgsConstructor
+public class CursoAdapter implements CursoOutPort {
+    private final CursoRepository repository;
 
-    private final CursoOutPort cursoOutPort;
+    @Override
+    @Transactional
+    public CursoDomain guardarCurso(CursoDomain curso) {
 
-    public CursoAdapter(CursoOutPort cursoOutPort){
-        this.cursoOutPort = cursoOutPort;
+        CursoEntity entity = CursoMapper.toEntity(curso);
+
+        entity = repository.getEntityManager().merge(entity);
+
+        return CursoMapper.toDomain(entity);
     }
 
-    public CursoResponse obtenerCursoporId(Long idCurso){
-        CursoDomain domain = cursoOutPort.buscarPorId(idCurso);
-        return CursoMapper.toResponse(domain);
+    @Override
+    public CursoDomain buscarPorId(Long idCurso) {
+
+        CursoEntity entity = repository.findById(idCurso);
+
+        return CursoMapper.toDomain(entity);
     }
 
-    public List<CursoResponse> obtenerCursos(){
-        List<CursoDomain> resultados = cursoOutPort.listarCursos();
-        return resultados.stream()
-                .map(CursoMapper::toResponse)
-                .collect(Collectors.toList());
+    @Override
+    public List<CursoDomain> listarCursos() {
+
+        return CursoMapper.toDomainList(repository.listAll());
     }
 
-    public CursoResponse guardarCurso(CursoRequest request){
-        CursoDomain domain = CursoMapper.toDomain(request);
-        CursoDomain saved = cursoOutPort.guardarCurso(domain);
-        return CursoMapper.toResponse(saved);
+    @Override
+    @Transactional
+    public void eliminar(Long idCurso) {
+
+        repository.deleteById(idCurso);
     }
 
-    public void eliminarCurso(Long idCurso){
-        cursoOutPort.eliminar(idCurso);
-    }
+
 }

@@ -5,7 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
+
 
 /**
  * <b>
@@ -43,11 +44,11 @@ public class CursoEntity extends PanacheEntityBase implements Serializable {
     @Column(name = "modalidad" )
     private String modalidad;
 
-    @Column(name = "fechaInicio" )
-    private Date fechaInicio;
+    @Column(name = "fechainicio" )
+    private LocalDate fechaInicio;
 
     @Column(name = "fechafin" )
-    private Date fechaFin;
+    private LocalDate fechaFin;
 
     @Column(name = "imagen" )
     private String imagen;

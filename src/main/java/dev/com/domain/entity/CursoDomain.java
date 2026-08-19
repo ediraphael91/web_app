@@ -5,7 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 /**
  * <b>
@@ -29,8 +30,8 @@ public class CursoDomain {
     private Double precio;
     private String categoria;
     private String modalidad;
-    private Date fechaInicio;
-    private Date fechaFin;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
     private String imagen;
     private Boolean estado;
 }

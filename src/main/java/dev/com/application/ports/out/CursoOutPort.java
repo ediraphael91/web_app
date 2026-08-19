@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * <b>
- * Credito Host InPort.
+ * Curso OutPort.
  * </b>
  *
  * @author Edison Santacruz

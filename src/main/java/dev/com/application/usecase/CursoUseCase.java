@@ -2,13 +2,15 @@ package dev.com.application.usecase;
 
 import dev.com.application.ports.in.CursoInPort;
 import dev.com.application.ports.out.CursoOutPort;
+import dev.com.application.ports.out.ImagenOutPort;
 import dev.com.domain.entity.CursoDomain;
 import dev.com.domain.request.CursoRequest;
 import dev.com.domain.response.CursoResponse;
 import dev.com.infraestructure.adapter.out.repository.mapper.CursoMapper;
 import jakarta.enterprise.context.ApplicationScoped;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
 
-
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,18 +29,28 @@ import java.util.stream.Collectors;
 public class CursoUseCase implements CursoInPort {
 
     private final CursoOutPort cursoOutPort;
+    private final ImagenOutPort imagenOutPort;
 
 
-    public CursoUseCase(CursoOutPort cursoOutPort){
+    public CursoUseCase(CursoOutPort cursoOutPort, ImagenOutPort imagenOutPort){
         this.cursoOutPort = cursoOutPort;
+        this.imagenOutPort = imagenOutPort;
 
     }
 
     @Override
-    public CursoResponse crearCurso(CursoRequest request){
+    public CursoResponse crearCurso(CursoRequest request, FileUpload imagen){
+        try {
+            if (imagen != null) {
+                String nombreImagen = imagenOutPort.guardar(imagen);
+                request.setImagen(nombreImagen);
+            }
         CursoDomain domain = CursoMapper.toDomain(request);
         CursoDomain saved = cursoOutPort.guardarCurso(domain);
         return CursoMapper.toResponse(saved);
+    } catch (IOException e) {
+            throw new RuntimeException("Error al gaurdar la imagen del curso", e);
+        }
     }
 
     @Override

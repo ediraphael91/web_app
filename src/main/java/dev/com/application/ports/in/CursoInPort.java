@@ -2,6 +2,7 @@ package dev.com.application.ports.in;
 
 import dev.com.domain.request.CursoRequest;
 import dev.com.domain.response.CursoResponse;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public interface CursoInPort {
 
-    CursoResponse crearCurso(CursoRequest request);
+    CursoResponse crearCurso(CursoRequest request, FileUpload imagen);
     CursoResponse actualizarCurso(Long idCurso, CursoRequest request);
     void eliminarCurso(Long idCurso);
     List<CursoResponse> listarCursos();

@@ -1,6 +1,7 @@
 package dev.com.infraestructure.adapter.in.rest;
 
 import dev.com.application.ports.in.CursoInPort;
+import dev.com.domain.request.CursoFormRequest;
 import dev.com.domain.request.CursoRequest;
 import dev.com.domain.response.CursoResponse;
 import jakarta.inject.Inject;
@@ -9,6 +10,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.List;
+
 
 /**
  * <b>
@@ -23,45 +25,63 @@ import java.util.List;
  */
 @Path("/cursos")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class CursoRest {
 
     private final CursoInPort cursoInPort;
 
     @Inject
-    public CursoRest(CursoInPort cursoInPort){
+    public CursoRest(CursoInPort cursoInPort) {
         this.cursoInPort = cursoInPort;
     }
 
     @POST
     @Path("/crear")
-    public CursoResponse crearCurso(CursoRequest request){
-        return cursoInPort.crearCurso(request);
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public CursoResponse crearCurso(CursoFormRequest form) {
+
+        CursoRequest request = CursoRequest.builder()
+                .nombre(form.getNombre())
+                .descripcion(form.getDescripcion())
+                .precio(form.getPrecio())
+                .categoria(form.getCategoria())
+                .modalidad(form.getModalidad())
+                .fechaInicio(form.getFechaInicio())
+                .fechaFin(form.getFechaFin())
+                .estado(form.getEstado())
+                .build();
+
+        return cursoInPort.crearCurso(
+                request,
+                form.getImagen()
+        );
     }
 
     @PUT
     @Path("/actualizar/{idCurso}")
-    public CursoResponse actualizarCurso(@PathParam("idCurso") Long idCurso, CursoRequest request){
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public CursoResponse actualizarCurso(@PathParam("idCurso") Long idCurso, CursoRequest request) {
         return cursoInPort.actualizarCurso(idCurso, request);
     }
 
     @DELETE
     @Path("/eliminar/{idCurso}")
-    public void eliminarCurso(@PathParam("idCurso") Long idCurso){
+    public void eliminarCurso(@PathParam("idCurso") Long idCurso) {
         cursoInPort.eliminarCurso(idCurso);
     }
 
     @GET
     @Path("/listar")
-    public List<CursoResponse> listarCursos(){
+    public List<CursoResponse> listarCursos() {
         return cursoInPort.listarCursos();
     }
 
     @GET
     @Path("/listar/{idCurso}")
-    public Response buscarPorId(@PathParam("idCurso") Long idCurso){
+    public Response buscarPorId(@PathParam("idCurso") Long idCurso) {
         CursoResponse curso = cursoInPort.buscarPorId(idCurso);
-        if (curso == null){
+        if (curso == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(curso).build();
