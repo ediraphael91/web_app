@@ -4,8 +4,10 @@ import dev.com.application.ports.in.CursoInPort;
 import dev.com.application.ports.out.CursoOutPort;
 import dev.com.application.ports.out.ImagenOutPort;
 import dev.com.domain.entity.CursoDomain;
+import dev.com.domain.entity.PaginasDomain;
 import dev.com.domain.request.CursoRequest;
 import dev.com.domain.response.CursoResponse;
+import dev.com.domain.response.PaginaResponse;
 import dev.com.infraestructure.adapter.out.repository.mapper.CursoMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
@@ -32,34 +34,53 @@ public class CursoUseCase implements CursoInPort {
     private final ImagenOutPort imagenOutPort;
 
 
-    public CursoUseCase(CursoOutPort cursoOutPort, ImagenOutPort imagenOutPort){
+    public CursoUseCase(CursoOutPort cursoOutPort, ImagenOutPort imagenOutPort) {
         this.cursoOutPort = cursoOutPort;
         this.imagenOutPort = imagenOutPort;
 
     }
 
     @Override
-    public CursoResponse crearCurso(CursoRequest request, FileUpload imagen){
+    public CursoResponse crearCurso(CursoRequest request, FileUpload imagen) {
         try {
             if (imagen != null) {
                 String nombreImagen = imagenOutPort.guardar(imagen);
                 request.setImagen(nombreImagen);
             }
-        CursoDomain domain = CursoMapper.toDomain(request);
-        CursoDomain saved = cursoOutPort.guardarCurso(domain);
-        return CursoMapper.toResponse(saved);
-    } catch (IOException e) {
-            throw new RuntimeException("Error al gaurdar la imagen del curso", e);
+            CursoDomain domain = CursoMapper.toDomain(request);
+            CursoDomain saved = cursoOutPort.guardarCurso(domain);
+            return CursoMapper.toResponse(saved);
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar la imagen del curso", e);
         }
     }
 
     @Override
-    public CursoResponse actualizarCurso(Long idCurso, CursoRequest request){
+    public CursoResponse actualizarCurso(Long idCurso, CursoRequest request, FileUpload imagen) {
+        try {
+            if (imagen != null) {
+                // Llega imagen nueva -> se guarda y se reemplaza el nombre
+                String nombreImagen = imagenOutPort.guardar(imagen);
+                request.setImagen(nombreImagen);
+            } else {
+                // No llega imagen -> conservar la que ya existía en BD
+                CursoDomain existente = cursoOutPort.buscarPorId(idCurso);
+                if (existente == null) {
+                    throw new RuntimeException("Curso no encontrado con Id: " + idCurso);
+                }
+                request.setImagen(existente.getImagen());
+            }
+
         CursoDomain domain = CursoMapper.toDomain(request);
         domain.setIdCurso(idCurso);
         CursoDomain update = cursoOutPort.guardarCurso(domain);
         return CursoMapper.toResponse(update);
+
+        } catch(IOException e) {
+            throw new RuntimeException("Error al guardar la imagen del curso", e);
+            }
     }
+
 
     @Override
     public void eliminarCurso(Long idCurso){
@@ -78,5 +99,18 @@ public class CursoUseCase implements CursoInPort {
     public CursoResponse buscarPorId(Long idCurso) {
         CursoDomain domain = cursoOutPort.buscarPorId(idCurso);
         return domain != null ? CursoMapper.toResponse(domain) : null;
+    }
+
+    @Override
+    public PaginaResponse<CursoResponse> listaCursoPag(int page, int size) {
+        PaginasDomain<CursoDomain> pagina = cursoOutPort.listaCursoPag(page, size);
+        List<CursoResponse> contenido = CursoMapper.toResponseList(pagina.getContenido());
+        return PaginaResponse.<CursoResponse>builder()
+                .contenido(contenido)
+                .totalElementos(pagina.getTotalElementos())
+                .totalPaginas(pagina.getTotalPaginas())
+                .paginaActual(pagina.getPaginaActual())
+                .tamanoPagina(pagina.getTamanoPAgina())
+                .build();
     }
 }

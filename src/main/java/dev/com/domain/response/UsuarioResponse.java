@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -13,9 +17,12 @@ public class UsuarioResponse {
 
     private Long idusuario;
     private String nombre;
-    private String password;
+    private String apellido;
+    private String profesion;
     private String correo;
     private String contacto;
-    private String Date;
+    private LocalDate fechaCumpleano;
+    private String clave;
     private Boolean estado;
+    private LocalDateTime fechaEliminacion;
 }

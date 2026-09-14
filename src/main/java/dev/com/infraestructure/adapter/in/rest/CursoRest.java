@@ -4,10 +4,14 @@ import dev.com.application.ports.in.CursoInPort;
 import dev.com.domain.request.CursoFormRequest;
 import dev.com.domain.request.CursoRequest;
 import dev.com.domain.response.CursoResponse;
+import dev.com.domain.response.PaginaResponse;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.jboss.resteasy.reactive.MultipartForm;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.DefaultValue;
 
 import java.util.List;
 
@@ -59,10 +63,23 @@ public class CursoRest {
 
     @PUT
     @Path("/actualizar/{idCurso}")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public CursoResponse actualizarCurso(@PathParam("idCurso") Long idCurso, CursoRequest request) {
-        return cursoInPort.actualizarCurso(idCurso, request);
+    public CursoResponse actualizarCurso(@PathParam("idCurso") Long idCurso,
+                                         @MultipartForm CursoFormRequest form) {
+
+        CursoRequest requestUpdate = CursoRequest.builder()
+                .nombre(form.getNombre())
+                .descripcion(form.getDescripcion())
+                .precio(form.getPrecio())
+                .categoria(form.getCategoria())
+                .modalidad(form.getModalidad())
+                .fechaInicio(form.getFechaInicio())
+                .fechaFin(form.getFechaFin())
+                .estado(form.getEstado())
+                .build();
+
+        return cursoInPort.actualizarCurso(idCurso, requestUpdate, form.getImagen());
     }
 
     @DELETE
@@ -86,4 +103,13 @@ public class CursoRest {
         }
         return Response.ok(curso).build();
     }
+
+    @GET
+    @Path("/listar/paginado")
+    public PaginaResponse<CursoResponse> listaCursoPag(
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("size") @DefaultValue("5") int size) {
+        return cursoInPort.listaCursoPag(page, size);
+    }
+
 }

@@ -2,13 +2,16 @@ package dev.com.infraestructure.adapter;
 
 import dev.com.application.ports.out.CursoOutPort;
 import dev.com.domain.entity.CursoDomain;
+import dev.com.domain.entity.PaginasDomain;
 import dev.com.infraestructure.adapter.out.entity.CursoEntity;
 import dev.com.infraestructure.adapter.out.repository.CursoRepository;
 import dev.com.infraestructure.adapter.out.repository.mapper.CursoMapper;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -26,16 +29,31 @@ import java.util.List;
 @ApplicationScoped
 @AllArgsConstructor
 public class CursoAdapter implements CursoOutPort {
+
     private final CursoRepository repository;
 
     @Override
     @Transactional
     public CursoDomain guardarCurso(CursoDomain curso) {
-
-        CursoEntity entity = CursoMapper.toEntity(curso);
-
-        entity = repository.getEntityManager().merge(entity);
-
+        CursoEntity entity;
+        if (curso.getIdCurso() != null) {
+            entity = repository.findById(curso.getIdCurso());
+            if (entity == null) {
+                throw new IllegalArgumentException("Id de Curso no encontrado." + curso.getIdCurso());
+            }
+            entity.setNombre(curso.getNombre());
+            entity.setDescripcion(curso.getDescripcion());
+            entity.setPrecio(curso.getPrecio());
+            entity.setCategoria(curso.getCategoria());
+            entity.setModalidad(curso.getModalidad());
+            entity.setFechaInicio(curso.getFechaInicio());
+            entity.setFechaFin(curso.getFechaFin());
+            entity.setImagen(curso.getImagen());
+            entity.setEstado(curso.getEstado());
+        } else {
+            entity = CursoMapper.toEntity(curso);
+            repository.persist(entity);
+        }
         return CursoMapper.toDomain(entity);
     }
 
@@ -49,15 +67,36 @@ public class CursoAdapter implements CursoOutPort {
 
     @Override
     public List<CursoDomain> listarCursos() {
-
-        return CursoMapper.toDomainList(repository.listAll());
+        return CursoMapper.toDomainList(repository.list("estado", true));
     }
 
     @Override
     @Transactional
     public void eliminar(Long idCurso) {
+        CursoEntity entity = repository.findById(idCurso);
+        if (entity == null) {
+            throw new IllegalArgumentException("Curso no encontrado Id: " + idCurso);
+        }
+        entity.setEstado(false);
+        entity.setFechaEliminacion(LocalDateTime.now());
+        entity.persist();
+    }
 
-        repository.deleteById(idCurso);
+    @Override
+    public PaginasDomain<CursoDomain> listaCursoPag(int page, int size) {
+        PanacheQuery<CursoEntity> query = repository.paginarActivos(page, size);
+
+        List<CursoDomain> contenido = CursoMapper.toDomainList(query.list());
+        long totalElementos = query.count();
+        int totalPaginas = query.pageCount();
+
+        return PaginasDomain.<CursoDomain>builder()
+                .contenido(contenido)
+                .totalElementos(totalElementos)
+                .totalPaginas(totalPaginas)
+                .paginaActual(page)
+                .tamanoPAgina(size)
+                .build();
     }
 
 

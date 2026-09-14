@@ -1,6 +1,7 @@
 package dev.com.application.ports.out;
 
 import dev.com.domain.entity.CursoDomain;
+import dev.com.domain.entity.PaginasDomain;
 
 import java.util.List;
 
@@ -21,4 +22,5 @@ public interface CursoOutPort {
     CursoDomain buscarPorId(Long idCurso);
     List<CursoDomain> listarCursos();
     void eliminar (Long idCurso);
+    PaginasDomain<CursoDomain> listaCursoPag(int page, int size);
 }

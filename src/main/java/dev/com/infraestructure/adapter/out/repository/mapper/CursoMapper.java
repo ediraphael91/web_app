@@ -40,7 +40,8 @@ public final class CursoMapper {
                 entity.getFechaInicio(),
                 entity.getFechaFin(),
                 entity.getImagen(),
-                entity.getEstado()
+                entity.getEstado(),
+                entity.getFechaEliminacion()
         );
     }
 
@@ -61,6 +62,7 @@ public final class CursoMapper {
         entity.setFechaFin(domain.getFechaFin());
         entity.setImagen(domain.getImagen());
         entity.setEstado(domain.getEstado());
+        entity.setFechaEliminacion(domain.getFechaEliminacion());
         return entity;
     }
 
@@ -79,7 +81,8 @@ public final class CursoMapper {
                 request.getFechaInicio(),
                 request.getFechaFin(),
                 request.getImagen(),
-                request.getEstado()
+                request.getEstado(),
+                request.getFechaEliminacion()
         );
     }
 
@@ -97,8 +100,9 @@ public final class CursoMapper {
                 domain.getModalidad(),
                 domain.getFechaInicio(),
                 domain.getFechaFin(),
-                domain.getImagen(),
-                domain.getEstado()
+                "http://localhost:8080/uploads/cursos/" + domain.getImagen(),
+                domain.getEstado(),
+                domain.getFechaEliminacion()
         );
     }
 

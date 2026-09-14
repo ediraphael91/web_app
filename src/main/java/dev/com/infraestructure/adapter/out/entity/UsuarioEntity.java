@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "usuario")
@@ -14,13 +17,16 @@ public class UsuarioEntity extends PanacheEntityBase implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario" )
-    private Long idusuario;
+    private Long idUsuario;
 
     @Column(name = "nombre" )
     private String nombre;
 
     @Column(name = "apellido" )
-    private String password;
+    private String apellido;
+
+    @Column(name = "profesion" )
+    private String profesion;
 
     @Column(name = "correo" )
     private String correo;
@@ -28,9 +34,15 @@ public class UsuarioEntity extends PanacheEntityBase implements Serializable {
     @Column(name = "contacto" )
     private String contacto;
 
-    @Column(name = "fecha_nacimineto" )
-    private String Date;
+    @Column(name = "fecha_nacimiento" )
+    private LocalDate fechaCumpleano;
+
+    @Column(name = "clave" )
+    private String clave;
 
     @Column(name = "estado" )
     private Boolean estado;
+
+    @Column(name = "fechaElimina")
+    private LocalDateTime fechaEliminacion;
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 /**
@@ -55,4 +56,9 @@ public class CursoEntity extends PanacheEntityBase implements Serializable {
 
     @Column(name = "estado" )
     private Boolean  estado;
+
+    @Column(name = "fechaElimina")
+    private LocalDateTime fechaEliminacion;
+
+
 }
