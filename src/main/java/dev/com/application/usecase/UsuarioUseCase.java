@@ -10,7 +10,6 @@ import dev.com.domain.response.UsuarioResponse;
 import dev.com.infraestructure.adapter.out.repository.mapper.UsuarioMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +31,14 @@ public class UsuarioUseCase implements UsuarioInPort {
     }
 
     @Override
+    public UsuarioResponse actualizarUsuario(Long idUsuario, UsuarioRequest request) {
+        UsuarioDomain domain = UsuarioMapper.toDomain(request);
+        domain.setIdUsuario(idUsuario);
+        UsuarioDomain update = usuarioOutPort.guardarUsuario(domain);
+        return UsuarioMapper.toResponse(update);
+    }
+
+    @Override
     public List<UsuarioResponse> listarUsuarios() {
         return usuarioOutPort.listarUsuarios()
                 .stream()
@@ -40,8 +47,8 @@ public class UsuarioUseCase implements UsuarioInPort {
     }
 
     @Override
-    public PaginaResponse<UsuarioResponse> listaUsuarioPag(int page, int size) {
-        PaginasDomain<UsuarioDomain> pagina = usuarioOutPort.listaUsuarioPag(page, size);
+    public PaginaResponse<UsuarioResponse> listaPagina(int page, int size) {
+        PaginasDomain<UsuarioDomain> pagina = usuarioOutPort.listaPagina(page, size);
         List<UsuarioResponse> contenido = UsuarioMapper.toResponseList(pagina.getContenido());
         return PaginaResponse.<UsuarioResponse>builder()
                 .contenido(contenido)
@@ -50,6 +57,11 @@ public class UsuarioUseCase implements UsuarioInPort {
                 .paginaActual(pagina.getPaginaActual())
                 .tamanoPagina(pagina.getTamanoPAgina())
                 .build();
+    }
+
+    @Override
+    public void eliminarUsuario(Long idUsuario) {
+        usuarioOutPort.eliminar(idUsuario);
     }
 
 }

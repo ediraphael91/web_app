@@ -22,5 +22,5 @@ public interface CursoOutPort {
     CursoDomain buscarPorId(Long idCurso);
     List<CursoDomain> listarCursos();
     void eliminar (Long idCurso);
-    PaginasDomain<CursoDomain> listaCursoPag(int page, int size);
+    PaginasDomain<CursoDomain> listaPagina(int page, int size);
 }

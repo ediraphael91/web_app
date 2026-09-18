@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -25,4 +24,5 @@ public class UsuarioDomain {
     private String clave;
     private Boolean estado;
     private LocalDateTime fechaEliminacion;
+    private LocalDateTime fechaModificacion;
 }

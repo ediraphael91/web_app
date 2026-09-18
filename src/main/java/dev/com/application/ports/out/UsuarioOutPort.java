@@ -8,8 +8,7 @@ import java.util.List;
 public interface UsuarioOutPort {
 
     UsuarioDomain guardarUsuario(UsuarioDomain usuario);
-    //UsuarioDomain buscarPorId(Long idUsuario);
     List<UsuarioDomain> listarUsuarios();
-    //void eliminarUsuario(Long idUsuario);
-    PaginasDomain<UsuarioDomain> listaUsuarioPag(int page, int size);
+    void eliminar(Long idUsuario);
+    PaginasDomain<UsuarioDomain> listaPagina(int page, int size);
 }

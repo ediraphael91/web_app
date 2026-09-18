@@ -11,42 +11,53 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
 @AllArgsConstructor
 public class UsuarioAdapter implements UsuarioOutPort {
 
-    private final UsuarioRepository repository;
+    private final UsuarioRepository repoUsuario;
 
     @Override
     @Transactional
     public UsuarioDomain guardarUsuario(UsuarioDomain usuario) {
         UsuarioEntity entity;
         if (usuario.getIdUsuario() != null) {
-            entity = repository.findById(usuario.getIdUsuario());
+            entity = repoUsuario.findById(usuario.getIdUsuario());
             if (entity == null) {
-            throw new IllegalArgumentException("Usuario no encontrrado Id:" + usuario.getIdUsuario());
-        }
-        entity.setNombre(usuario.getNombre());
-    } else
+                throw new IllegalArgumentException("Usuario no encontrrado Id:" + usuario.getIdUsuario());
+            }
+            entity.setNombre(usuario.getNombre());
+            entity.setApellido(usuario.getApellido());
+            entity.setProfesion(usuario.getProfesion());
+            entity.setCorreo(usuario.getCorreo());
+            entity.setContacto(usuario.getContacto());
+            entity.setFechaCumpleano(usuario.getFechaCumpleano());
+            entity.setEstado(usuario.getEstado());
+            entity.setFechaModificacion(LocalDateTime.now());
 
-    {
-        entity = UsuarioMapper.toEntity(usuario);
-        repository.persist(entity);
-    }
-    return UsuarioMapper.toDomain(entity);
+            // Actualizar si viene una nueva
+            if (usuario.getClave() != null && !usuario.getClave().isBlank()) {
+                entity.setClave(usuario.getClave());
+            }
+        } else {
+            entity = UsuarioMapper.toEntity(usuario);
+            repoUsuario.persist(entity);
+        }
+        return UsuarioMapper.toDomain(entity);
 
     }
 
     @Override
     public List<UsuarioDomain> listarUsuarios() {
-        return UsuarioMapper.toDomainList(repository.list("estado", true));
+        return UsuarioMapper.toDomainList(repoUsuario.list("estado", true));
     }
 
     @Override
-    public PaginasDomain<UsuarioDomain> listaUsuarioPag(int page, int size) {
-        PanacheQuery<UsuarioEntity> query = repository.paginarActivos(page, size);
+    public PaginasDomain<UsuarioDomain> listaPagina(int page, int size) {
+        PanacheQuery<UsuarioEntity> query = repoUsuario.paginarActivos(page, size);
 
         List<UsuarioDomain> contenido = UsuarioMapper.toDomainList(query.list());
         long totalElementos = query.count();
@@ -61,6 +72,17 @@ public class UsuarioAdapter implements UsuarioOutPort {
                 .build();
     }
 
+    @Override
+    @Transactional
+    public void eliminar(Long idUsuario) {
+        UsuarioEntity entity = repoUsuario.findById(idUsuario);
+        if (entity == null) {
+            throw new IllegalArgumentException("Usuario no encontrado Id: " + idUsuario);
+        }
+        entity.setEstado(false);
+        entity.setFechaEliminacion(LocalDateTime.now());
+        entity.persist();
+    }
 }
 
 

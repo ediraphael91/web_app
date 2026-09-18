@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UsuarioResponse {
 
-    private Long idusuario;
+    private Long idUsuario;
     private String nombre;
     private String apellido;
     private String profesion;
@@ -25,4 +25,5 @@ public class UsuarioResponse {
     private String clave;
     private Boolean estado;
     private LocalDateTime fechaEliminacion;
+    private LocalDateTime fechaModificacion;
 }

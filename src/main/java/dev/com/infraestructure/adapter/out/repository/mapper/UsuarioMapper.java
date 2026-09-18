@@ -27,7 +27,8 @@ public class UsuarioMapper {
                 entity.getFechaCumpleano(),
                 entity.getClave(),
                 entity.getEstado(),
-                entity.getFechaEliminacion()
+                entity.getFechaEliminacion(),
+                entity.getFechaModificacion()
         );
     }
 
@@ -48,6 +49,7 @@ public class UsuarioMapper {
         entity.setClave(domain.getClave());
         entity.setEstado(domain.getEstado());
         entity.setFechaEliminacion(domain.getFechaEliminacion());
+        entity.setFechaModificacion(domain.getFechaModificacion());
         return entity;
     }
 
@@ -66,7 +68,8 @@ public class UsuarioMapper {
                 request.getFechaCumpleano(),
                 request.getClave(),
                 request.getEstado(),
-                request.getFechaEliminacion()
+                request.getFechaEliminacion(),
+                null
         );
     }
 
@@ -85,7 +88,8 @@ public class UsuarioMapper {
         domain.getFechaCumpleano(),
         domain.getClave(),
         domain.getEstado(),
-        domain.getFechaEliminacion()
+        domain.getFechaEliminacion(),
+        domain.getFechaModificacion()
         );
     }
 

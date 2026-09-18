@@ -9,10 +9,10 @@ import java.util.List;
 public interface UsuarioInPort {
 
     UsuarioResponse crearUsuario(UsuarioRequest request);
-    //UsuarioResponse actualizarUsuario(Long idUsuario, UsuarioRequest request);
-    //void eliminarUsuario(Long idUsuario);
+    UsuarioResponse actualizarUsuario(Long idUsuario, UsuarioRequest request);
     List<UsuarioResponse> listarUsuarios();
-    //CursoResponse buscarPorId(Long idUsuario);
-    PaginaResponse<UsuarioResponse> listaUsuarioPag(int page, int size);
+    void eliminarUsuario(Long idusuario);
+    PaginaResponse<UsuarioResponse> listaPagina(int page, int size);
+
 
 }

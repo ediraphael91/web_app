@@ -25,5 +25,5 @@ public interface CursoInPort {
     void eliminarCurso(Long idCurso);
     List<CursoResponse> listarCursos();
     CursoResponse buscarPorId(Long idCurso);
-    PaginaResponse<CursoResponse> listaCursoPag(int page, int size);
+    PaginaResponse<CursoResponse> listaPagina(int page, int size);
 }

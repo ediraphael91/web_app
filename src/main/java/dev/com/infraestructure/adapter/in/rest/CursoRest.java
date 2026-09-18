@@ -106,10 +106,10 @@ public class CursoRest {
 
     @GET
     @Path("/listar/paginado")
-    public PaginaResponse<CursoResponse> listaCursoPag(
+    public PaginaResponse<CursoResponse> listaPagina(
             @QueryParam("page") @DefaultValue("0") int page,
             @QueryParam("size") @DefaultValue("5") int size) {
-        return cursoInPort.listaCursoPag(page, size);
+        return cursoInPort.listaPagina(page, size);
     }
 
 }

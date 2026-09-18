@@ -83,12 +83,12 @@ public class CursoUseCase implements CursoInPort {
 
 
     @Override
-    public void eliminarCurso(Long idCurso){
+    public void eliminarCurso(Long idCurso) {
         cursoOutPort.eliminar(idCurso);
     }
 
     @Override
-    public List<CursoResponse> listarCursos(){
+    public List<CursoResponse> listarCursos() {
         return cursoOutPort.listarCursos()
                 .stream()
                 .map(CursoMapper::toResponse)
@@ -102,8 +102,8 @@ public class CursoUseCase implements CursoInPort {
     }
 
     @Override
-    public PaginaResponse<CursoResponse> listaCursoPag(int page, int size) {
-        PaginasDomain<CursoDomain> pagina = cursoOutPort.listaCursoPag(page, size);
+    public PaginaResponse<CursoResponse> listaPagina(int page, int size) {
+        PaginasDomain<CursoDomain> pagina = cursoOutPort.listaPagina(page, size);
         List<CursoResponse> contenido = CursoMapper.toResponseList(pagina.getContenido());
         return PaginaResponse.<CursoResponse>builder()
                 .contenido(contenido)

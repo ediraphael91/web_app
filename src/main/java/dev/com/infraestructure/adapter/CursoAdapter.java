@@ -83,7 +83,7 @@ public class CursoAdapter implements CursoOutPort {
     }
 
     @Override
-    public PaginasDomain<CursoDomain> listaCursoPag(int page, int size) {
+    public PaginasDomain<CursoDomain> listaPagina(int page, int size) {
         PanacheQuery<CursoEntity> query = repository.paginarActivos(page, size);
 
         List<CursoDomain> contenido = CursoMapper.toDomainList(query.list());

@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -45,4 +44,7 @@ public class UsuarioEntity extends PanacheEntityBase implements Serializable {
 
     @Column(name = "fechaElimina")
     private LocalDateTime fechaEliminacion;
+
+    @Column(name = "fechaModifica")
+    private LocalDateTime fechaModificacion;
 }
