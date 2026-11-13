@@ -1,6 +1,6 @@
 package dev.com.domain.entity;
 
-public class RolDomain {
+public class CatRolesDomain {
 
     private Long idRol;
     private String nombre;

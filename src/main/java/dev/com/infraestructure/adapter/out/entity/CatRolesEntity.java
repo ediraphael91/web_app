@@ -7,9 +7,9 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "rol")
+@Table(name = "cat_roles")
 @Data
-public class RolEntity extends PanacheEntityBase implements Serializable {
+public class CatRolesEntity extends PanacheEntityBase implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
