@@ -28,7 +28,8 @@ public class UsuarioMapper {
                 entity.getClave(),
                 entity.getEstado(),
                 entity.getFechaEliminacion(),
-                entity.getFechaModificacion()
+                entity.getFechaModificacion(),
+                entity.getFechaCreacion()
         );
     }
 
@@ -69,6 +70,7 @@ public class UsuarioMapper {
                 request.getClave(),
                 request.getEstado(),
                 request.getFechaEliminacion(),
+                request.getFechaCreacion(),
                 null
         );
     }

@@ -25,4 +25,5 @@ public class UsuarioDomain {
     private Boolean estado;
     private LocalDateTime fechaEliminacion;
     private LocalDateTime fechaModificacion;
+    private LocalDateTime fechaCreacion;
 }

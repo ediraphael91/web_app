@@ -3,10 +3,13 @@ package dev.com.infraestructure.adapter.out.entity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "usuario")
@@ -47,4 +50,12 @@ public class UsuarioEntity extends PanacheEntityBase implements Serializable {
 
     @Column(name = "fechaModifica")
     private LocalDateTime fechaModificacion;
+
+    @Column(name = "fecha_creacion")
+    private LocalDateTime fechaCreacion;
+
+    @OneToMany(mappedBy = "usuario")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<UsuarioRolEntity> usuarioRoles;
 }

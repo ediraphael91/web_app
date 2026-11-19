@@ -25,4 +25,5 @@ public class UsuarioRequest {
     private String clave;
     private Boolean estado;
     private LocalDateTime fechaEliminacion;
+    private LocalDateTime fechaCreacion;
 }
