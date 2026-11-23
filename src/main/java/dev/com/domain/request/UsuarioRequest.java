@@ -26,4 +26,5 @@ public class UsuarioRequest {
     private Boolean estado;
     private LocalDateTime fechaEliminacion;
     private LocalDateTime fechaCreacion;
+    private Long idRol;
 }

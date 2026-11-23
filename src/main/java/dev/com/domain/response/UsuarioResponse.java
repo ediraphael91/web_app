@@ -26,4 +26,6 @@ public class UsuarioResponse {
     private Boolean estado;
     private LocalDateTime fechaEliminacion;
     private LocalDateTime fechaModificacion;
+    private Long idRol;
+    private String rol;
 }

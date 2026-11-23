@@ -26,4 +26,6 @@ public class UsuarioDomain {
     private LocalDateTime fechaEliminacion;
     private LocalDateTime fechaModificacion;
     private LocalDateTime fechaCreacion;
+    private Long idRol;
+    private String rolNombre;
 }
